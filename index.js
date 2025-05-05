@@ -57,7 +57,7 @@ app.get('/', (req, res) => {
         <form action='/members' method='get'>
             <button>Go to Members Area</button>
         </form>
-        <form action='/logout' method='post'>
+        <form action='/logout' method='get'>
             <button>Logout</button>
         </form>
     `;
@@ -230,14 +230,14 @@ app.get('/members', (req, res) => {
     Hello, ${req.session.username}!
     <img src='${images[randomImage]}' width='500' height='500'>
     <br>
-    <form action='/logout' method='post'>
+    <form action='/logout' method='get'>
         <button>Log Out</button>
     </form>
     `;
     res.send(html);
 });
 
-app.post('/logout', (req, res) => {
+app.get('/logout', (req, res) => {
     req.session.destroy();
     res.redirect('/?loggedOut=1');
 });
