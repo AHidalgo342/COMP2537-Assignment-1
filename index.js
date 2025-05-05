@@ -195,7 +195,7 @@ app.post('/loggingin', async (req, res) => {
         html += `User not found <br>`;
     }
 
-    if (validationResult.error == null && await bcrypt.compare(password, result[0].password)) {
+    if (result.length == 1 && await bcrypt.compare(password, result[0].password)) {
         console.log("correct password");
         req.session.authenticated = true;
         req.session.username = result[0].username; // the username is stored in the session.
