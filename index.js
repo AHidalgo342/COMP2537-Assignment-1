@@ -175,7 +175,8 @@ app.post('/loggingin', async (req, res) => {
     var email = req.body.email;
     var password = req.body.password;
 
-    const schema = Joi.string().email({ minDomainSegments: 2, tlds: { allow: ['com', 'net', 'ca'] } })
+    // validate email first
+    const schema = Joi.string().email({ minDomainSegments: 2, tlds: { allow: ['com', 'net', 'ca'] } });
     const validationResult = schema.validate(email);
 
     if (validationResult.error != null) {
@@ -183,6 +184,8 @@ app.post('/loggingin', async (req, res) => {
         html += `Invalid Email <br>`;
     }
 
+    // only the email is used to check the database.
+    // at this point the email has already been validated for any NoSQL injection.
     const result = await userCollection.find({ email: email }).project({ email: 1, username: 1, password: 1, _id: 1 }).toArray();
 
     console.log(result);
@@ -195,7 +198,7 @@ app.post('/loggingin', async (req, res) => {
     if (validationResult.error == null && await bcrypt.compare(password, result[0].password)) {
         console.log("correct password");
         req.session.authenticated = true;
-        req.session.username = result[0].username;
+        req.session.username = result[0].username; // the username is stored in the session.
         req.session.cookie.maxAge = expireTime;
 
         res.redirect('/members');
