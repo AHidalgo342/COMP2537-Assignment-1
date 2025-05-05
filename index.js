@@ -127,7 +127,7 @@ app.post('/submitUser', async (req, res) => {
 
     const validateEmail = Joi.object(
         {
-            email: Joi.string().email({ minDomainSegments: 2, tlds: { allow: ['com', 'net', 'ca'] } })
+            email: Joi.string().email({ minDomainSegments: 2, tlds: { allow: ['com', 'net', 'ca'] } }).required()
         });
 
     const validName = validateName.validate({ username });
@@ -137,13 +137,13 @@ app.post('/submitUser', async (req, res) => {
     var html = '';
 
     if (validName.error != null) {
-        html += 'Name is required or longer than 20 characters <br>';
+        html += 'Invalid name <br>';
     }
     if (validPassword.error != null) {
-        html += 'Password Is required or longer than 20 characters <br>';
+        html += 'Invalid password <br>';
     }
     if (validEmail.error != null) {
-        html += 'Email is not valid. <br>';
+        html += 'Invalid email <br>';
     }
 
     if (validName.error != null || validPassword.error != null || validEmail.error != null) {
@@ -219,15 +219,10 @@ app.get('/members', (req, res) => {
         return;
     }
 
-    const images = ['alien_anguish.jpg',
-        'alien_bug_eye.jpg',
-        'alien_crying.jpg',
+    const images = [
         'alien_huh.jpg',
-        'alien_sad.jpg',
         'alien_sandwich.jpg',
-        'alien_sitting.jpg',
-        'alien_stupid.jpg',
-        'alien_think_hard_crying.png'];
+        'alien_sitting.jpg'];
 
     var randomImage = Math.floor(Math.random() * images.length);
 
